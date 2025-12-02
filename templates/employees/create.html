@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="mb-4 fw-bold">Add New Employee</h3>
+
+<form method="POST">
+  {% csrf_token %}
+  
+  <label>Username</label>
+  <input type="text" name="username" class="form-control mb-2" required>
+
+  <label>Password</label>
+  <input type="password" name="password" class="form-control mb-3" required>
+
+  {{ form.as_p }}
+
+  <button class="btn btn-success px-4">Create Employee</button>
+</form>
+{% endblock %}

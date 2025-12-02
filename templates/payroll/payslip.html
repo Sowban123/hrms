@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: DejaVu Sans, sans-serif; font-size: 12px; }
+        .header { text-align: center; margin-bottom: 15px; }
+        .company { font-size: 20px; font-weight: bold; }
+        .subtitle { font-size: 14px; margin-top: -5px; }
+        .section-title { background: #222; color: #fff; padding: 5px; font-weight: bold; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        th, td { border: 1px solid #555; padding: 6px; }
+        th { background: #eee; }
+        .amount { text-align: right; font-weight: bold; }
+        .net { background: #d5fcd2; font-size: 14px; font-weight: bold; }
+        .footer { margin-top: 30px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="company">coreconnect</div>
+    <div class="subtitle">Monthly Salary Slip</div>
+    <div>{{ payroll.month }}/{{ payroll.year }}</div>
+    <hr>
+</div>
+
+<div class="section-title">Employee Details</div>
+<table>
+    <tr>
+        <th>Name</th>
+        <td>{{ payroll.employee.user.get_full_name }}</td>
+        <th>Employee ID</th>
+        <td>{{ payroll.employee.id }}</td>
+    </tr>
+    <tr>
+        <th>Designation</th>
+        <td>{{ payroll.employee.designation }}</td>
+        <th>Department</th>
+        <td>{{ payroll.employee.department }}</td>
+    </tr>
+</table>
+
+<div class="section-title">Attendance Summary</div>
+<table>
+    <tr>
+        <th>Working Days</th><td>{{ payroll.working_days }}</td>
+        <th>Present</th><td>{{ payroll.present_days }}</td>
+    </tr>
+    <tr>
+        <th>Absent</th><td>{{ payroll.absent_days }}</td>
+        <th>LOP Days</th><td>{{ payroll.lop_days }}</td>
+    </tr>
+</table>
+
+<div class="section-title">Salary Breakdown</div>
+<table>
+    <tr>
+        <th>Earnings</th>
+        <th>Amount (₹)</th>
+        <th>Deductions</th>
+        <th>Amount (₹)</th>
+    </tr>
+    <tr>
+        <td>Basic Salary</td>
+        <td class="amount">{{ payroll.basic_salary }}</td>
+        <td>Loss of Pay</td>
+        <td class="amount">{{ payroll.deductions }}</td>
+    </tr>
+</table>
+
+<table>
+    <tr>
+        <th class="net">Net Salary (₹)</th>
+        <td class="net amount">{{ payroll.net_salary }}</td>
+    </tr>
+</table>
+
+<div class="footer">
+    <p><strong>Declaration:</strong> This is a system generated payslip and does not require signature.</p>
+</div>
+
+</body>
+</html>
