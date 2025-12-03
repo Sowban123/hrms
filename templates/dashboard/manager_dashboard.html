@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="fw-bold mb-4">Manager Dashboard</h3>
+
+<div class="alert alert-info">
+  You are managing the <strong>{{ managed_department.name }}</strong> department.
+</div>
+
+<h5 class="fw-bold mt-4 mb-3">Your Team Members</h5>
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Employee</th>
+      <th>Designation</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for member in team %}
+    <tr>
+      <td>{{ member.user.get_full_name }}</td>
+      <td>{{ member.designation }}</td>
+      <td>
+        <a href="/attendance?emp={{ member.id }}" class="btn btn-sm btn-outline-dark">Attendance</a>
+        <a href="/leaves?emp={{ member.id }}" class="btn btn-sm btn-outline-dark">Leave Requests</a>
+        <a href="/payroll?emp={{ member.id }}" class="btn btn-sm btn-outline-dark">Payroll</a>
+       
+
+      </td>
+    </tr>
+     <a href="{% url 'leaves:manager_list' %}" class="btn btn-dark mb-3">View Team Leave Requests</a>
+    {% empty %}
+    <tr>
+      <td colspan="3" class="text-center">No team members in this department.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

@@ -1,18 +1,62 @@
 {% extends "base.html" %}
 {% block content %}
-<h3 class="mb-4 fw-bold">Add New Employee</h3>
 
-<form method="POST">
+<h3 class="fw-bold mb-4">Add New Employee</h3>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-success">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+{% if form.errors %}
+  <div class="alert alert-danger">
+    {% for field, errors in form.errors.items %}
+      {{ field }}: {{ errors|striptags }} <br>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<form method="POST" class="border rounded p-4 shadow-sm bg-white">
   {% csrf_token %}
-  
-  <label>Username</label>
-  <input type="text" name="username" class="form-control mb-2" required>
 
-  <label>Password</label>
-  <input type="password" name="password" class="form-control mb-3" required>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label class="fw-semibold">Username</label>
+      <input type="text" name="username" value="{{ request.POST.username }}" class="form-control" required>
+    </div>
+    <div class="col-md-6 mb-3">
+      <label class="fw-semibold">Password</label>
+      <input type="password" name="password" class="form-control" required>
+    </div>
+  </div>
 
-  {{ form.as_p }}
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label class="fw-semibold">Department</label>
+      {{ form.department }}
+    </div>
+    <div class="col-md-6 mb-3">
+      <label class="fw.UNRELATED">Designation</label>
+      {{ form.designation }}
+    </div>
+  </div>
 
-  <button class="btn btn-success px-4">Create Employee</button>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <label class="fw-semibold">Date of Joining</label>
+      {{ form.date_of_joining }}
+    </div>
+    <div class="col-md-6 mb-3">
+      <label class="fw-semibold">Basic Salary</label>
+      {{ form.basic_salary }}
+    </div>
+  </div>
+
+  <div class="text-end mt-3">
+    <button class="btn btn-success px-4">Create Employee</button>
+  </div>
+
 </form>
+
 {% endblock %}

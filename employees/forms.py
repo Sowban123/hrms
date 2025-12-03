@@ -22,16 +22,14 @@ class EmployeeCreateForm(forms.ModelForm):
             'basic_salary': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
-    # 🚨 validate username does not already exist
     def clean_username(self):
         username = self.cleaned_data['username']
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError("Username already exists")
         return username
 
-    # 🚨 ensure password is not empty
     def clean_password(self):
         password = self.cleaned_data['password']
-        if not password or password.strip() == "":
+        if not password.strip():
             raise forms.ValidationError("Password cannot be empty")
         return password

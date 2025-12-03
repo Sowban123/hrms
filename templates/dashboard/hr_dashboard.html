@@ -3,41 +3,80 @@
 <h3 class="mb-4 fw-bold">HR Dashboard</h3>
 
 <div class="row mb-4">
-  <div class="col-md-4">
-    <div class="card shadow-sm border-0 text-bg-primary">
-      <div class="card-body text-center">
-        <h6>Total Employees</h6>
-        <p class="fs-2 fw-bold">{{ total_employees }}</p>
+
+  <!-- Total Employees -->
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm border-0 text-bg-primary h-100">
+      <div class="card-body text-center d-flex flex-column">
+        <h6 class="fw-semibold">Total Employees</h6>
+        <p class="fs-2 fw-bold mb-4">{{ total_employees }}</p>
+       
       </div>
     </div>
   </div>
 
-  <div class="col-md-4">
-    <div class="card shadow-sm border-0 text-bg-warning">
-      <div class="card-body text-center">
-        <h6>Pending Leave Requests</h6>
-        <p class="fs-2 fw-bold">{{ pending_leaves }}</p>
+  <!-- Pending Leave Count -->
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm border-0 text-bg-warning h-100">
+      <div class="card-body text-center d-flex flex-column">
+        <h6 class="fw-semibold">Pending Leave Requests</h6>
+        <p class="fs-2 fw-bold mb-4">{{ pending_leaves }}</p>
+        <a href="#" class="invisible btn btn-light mt-auto">_</a> <!-- keeps equal height -->
       </div>
     </div>
   </div>
 
-  <div class="col-md-4">
-    <div class="card shadow-sm border-0 text-bg-warning">
-      <div class="card-body text-center">
-        <h6>Pending Leave Requests</h6>
-        <a href="{% url 'leaves:admin_list' %}" class="btn btn-dark px-4">Manage Leave Requests</a>
-         <a href="{% url 'employees:create' %}" class="btn btn-primary">Add New Employee</a>
-
-        
+  <!-- Manage Leave -->
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm border-0 text-bg-warning h-100">
+      <div class="card-body text-center d-flex flex-column">
+        <h6 class="fw-semibold">Leave Management</h6>
+        <p class="fs-2 fw-bold mb-4"><i class="bi bi-door-open-fill"></i></p>
+        <a href="{% url 'leaves:admin_list' %}" class="btn btn-dark mt-auto">Manage Leave Requests</a>
       </div>
     </div>
   </div>
 
-  
+  <!-- Employee Management -->
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm border-0 text-bg-info h-100">
+      <div class="card-body text-center d-flex flex-column">
+        <h6 class="fw-semibold">Employee Management</h6>
+        <p class="fs-2 fw-bold mb-4"><i class="bi bi-people-fill"></i></p>
+        <a href="{% url 'employees:create' %}" class="btn btn-primary mb-2 w-100 mt-auto">Add New Employee</a>
+        <a href="{% url 'employees:employee_list' %}" class="btn btn-light w-100">View Employees</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payroll -->
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm border-0 text-bg-danger h-100">
+      <div class="card-body text-center d-flex flex-column">
+        <h6 class="fw-semibold">Payroll</h6>
+        <p class="fs-2 fw-bold mb-4"><i class="bi bi-cash-coin"></i></p>
+        <a href="?show_payroll=true" class="btn btn-dark mt-auto w-100">Generate Payroll</a>
+      </div>
+    </div>
+    <a href="{% url 'employees:manage_departments' %}" class="btn btn-dark w-100 mt-2">Assign Managers</a>
+
+  </div>
+
+  <!-- Reports -->
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm border-0 text-bg-secondary h-100">
+      <div class="card-body text-center d-flex flex-column">
+        <h6 class="fw-semibold">Reports</h6>
+        <p class="fs-2 fw-bold mb-4"><i class="bi bi-bar-chart-fill"></i></p>
+        <a href="/reports/" class="btn btn-dark mt-auto w-100">View Reports</a>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 
-
+{% if show_payroll %}
 <hr class="my-4">
 
 <h4 class="fw-bold mt-3 mb-3">Generate Payroll</h4>
@@ -58,9 +97,7 @@
       <td>{{ emp.designation }}</td>
       <td>₹ {{ emp.basic_salary }}</td>
       <td>
-        <a href="{% url 'payroll:generate' emp.id %}" class="btn btn-dark btn-sm">
-          Generate Payroll
-        </a>
+        <a href="{% url 'payroll:generate' emp.id %}" class="btn btn-dark btn-sm">Generate</a>
       </td>
     </tr>
     {% empty %}
@@ -70,6 +107,6 @@
     {% endfor %}
   </tbody>
 </table>
-
+{% endif %}
 
 {% endblock %}

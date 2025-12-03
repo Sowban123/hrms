@@ -1,64 +1,89 @@
 {% extends 'base.html' %}
 {% block content %}
-<h3 class="mb-4 fw-bold">Admin Dashboard</h3>
 
-<div class="row mb-4">
+<h3 class="fw-bold mb-4">Admin Dashboard</h3>
+
+<div class="row g-4">
+
+  <!-- Total Employees -->
   <div class="col-md-4">
-    <div class="card shadow-sm border-0 text-bg-primary">
+    <div class="card shadow-sm border-0 text-bg-primary h-100">
       <div class="card-body text-center">
-        <h6 class="mb-2">Total Employees</h6>
+        <h6>Total Employees</h6>
         <p class="fs-2 fw-bold">{{ total_employees }}</p>
       </div>
     </div>
   </div>
 
+  <!-- Departments -->
   <div class="col-md-4">
-    <div class="card shadow-sm border-0 text-bg-success">
+    <div class="card shadow-sm border-0 text-bg-success h-100">
       <div class="card-body text-center">
-        <h6 class="mb-2">Departments</h6>
+        <h6>Departments</h6>
         <p class="fs-2 fw-bold">{{ total_departments }}</p>
       </div>
     </div>
   </div>
-{% if request.user.role == "ADMIN" or request.user.role == "HR" %}
-<li class="nav-item"><a href="/leaves/manage/" class="nav-link">Manage Leaves</a></li>
-{% endif %}
 
+  <!-- Pending Leaves -->
   <div class="col-md-4">
-    <div class="card shadow-sm border-0 text-bg-warning">
+    <div class="card shadow-sm border-0 text-bg-warning h-100">
       <div class="card-body text-center">
-        <h6 class="mb-2">Pending Leaves</h6>
+        <h6>Pending Leave Requests</h6>
         <p class="fs-2 fw-bold">{{ pending_leaves }}</p>
       </div>
     </div>
   </div>
+
+  <!-- Actions -->
+  <div class="col-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-body text-center">
+        <h6 class="fw-bold mb-3">Quick Actions</h6>
+        <a href="{% url 'employees:create' %}" class="btn btn-primary m-1">Add Employee</a>
+        <a href="{% url 'employees:employee_list' %}" class="btn btn-dark m-1">View Employees</a>
+        <a href="{% url 'employees:manage_departments' %}" class="btn btn-secondary m-1">Assign Managers</a>
+        <a href="{% url 'leaves:admin_list' %}" class="btn btn-warning m-1">Manage Leave Requests</a>
+        <a href="{% url 'reports:employees_csv' %}" class="btn btn-success m-1">Export Reports</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart -->
+  <div class="col-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <h5 class="card-title text-center mb-3">Employees per Department</h5>
+        <canvas id="deptChart" height="110"></canvas>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<div class="card shadow-sm border-0">
-  <div class="card-body">
-    <h5 class="card-title text-center mb-3">Employees per Department</h5>
-    <canvas id="deptChart" height="100"></canvas>
-  </div>
-</div>
 {% endblock %}
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 (async () => {
-  const resp = await fetch('/dashboard/stats/');
+  const resp = await fetch('{% url "dashboard:stats_api" %}');
   const data = await resp.json();
   const labels = data.map(d => d.name);
   const counts = data.map(d => d.count);
 
-  const ctx = document.getElementById('deptChart');
-  new Chart(ctx, {
+  new Chart(document.getElementById('deptChart'), {
     type: 'bar',
     data: {
       labels,
-      datasets: [{ label: "Employees", data: counts, borderWidth: 1 }]
-    },
+      datasets: [{
+        label: "Employees",
+        data: counts,
+        borderWidth: 1
+      }]
+    }
   });
 })();
 </script>
 {% endblock %}
+  
