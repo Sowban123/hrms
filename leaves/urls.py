@@ -17,4 +17,5 @@ urlpatterns = [
     path('manager/', views.manager_leave_list, name='manager_list'),
     path('manager/<int:pk>/approve/', views.manager_approve_leave, name='manager_approve'),
     path('manager/<int:pk>/reject/', views.manager_reject_leave, name='manager_reject'),
+    
 ]

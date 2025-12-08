@@ -1,8 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from employees.models import Employee, Department
+from django.contrib import messages
+
+from employees.models import Employee, Department, EmployeeProfile
 from leaves.models import LeaveRequest
+from employees.models import EmployeeProfile
+from django.utils import timezone
+from django.db.models import Exists, OuterRef
+from attendance.models import Attendance
 
 
 def dashboard_context():
@@ -15,21 +21,73 @@ def dashboard_context():
 
 @login_required
 def dashboard(request):
-    role = request.user.role
+    user = request.user
+    role = user.role
     context = dashboard_context()
 
     # ==========================================
-    # 🔥 Detect if logged-in employee is a MANAGER
+    # 1️⃣ MANAGER
     # ==========================================
-    managed_department = None
     try:
-        employee = Employee.objects.get(user=request.user)
-        managed_department = Department.objects.filter(manager=employee).first()
+        emp = Employee.objects.get(user=user)
+        dept = Department.objects.filter(manager=emp).first()
+
+        if dept:
+            profile, _ = EmployeeProfile.objects.get_or_create(employee=request.user)    
+
+
+
+
+
+
+            context["emp"] = emp
+            context["profile"] = profile
+            context["profile_pending"] = not profile.verified
+            context["managed_department"] = dept
+
+            today = timezone.localdate()
+
+            today_attendance = Attendance.objects.filter(
+                user=OuterRef('user'),
+                date=today,
+                check_in__isnull=False
+            )
+
+            team = (
+                Employee.objects.filter(department=dept)
+                .select_related("user", "designation")
+                .annotate(is_present=Exists(today_attendance))
+            )
+
+            context["team"] = team
+            context["present_count"] = team.filter(is_present=True).count()
+            context["absent_count"] = team.filter(is_present=False).count()
+            context["total_team"] = team.count()
+
+            return render(request, "dashboard/manager_dashboard.html", context)
+
     except Employee.DoesNotExist:
         pass
 
     # ==========================================
-    # 🧩 ADMIN DASHBOARD
+    # 2️⃣ EMPLOYEE
+    # ==========================================
+    if role == "EMPLOYEE":
+        emp = Employee.objects.get(user=user)
+        profile, _ = EmployeeProfile.objects.get_or_create(employee=emp.user)
+
+
+        context["emp"] = emp
+        context["profile"] = profile
+        context["profile_pending"] = not profile.verified
+
+        if not profile.verified:
+            messages.warning(request, "Profile pending HR approval.")
+
+        return render(request, "dashboard/employee_dashboard.html", context)
+
+    # ==========================================
+    # 3️⃣ ADMIN
     # ==========================================
     if role == "ADMIN":
         context["leaves"] = LeaveRequest.objects.select_related("employee").order_by("-created_at")[:10]
@@ -37,28 +95,19 @@ def dashboard(request):
         return render(request, "dashboard/admin_dashboard.html", context)
 
     # ==========================================
-    # 🧩 HR DASHBOARD
+    # 4️⃣ HR
     # ==========================================
     if role == "HR":
+        context["pending_profiles_count"] = EmployeeProfile.objects.filter(
+            verified=False,
+            employee__role="EMPLOYEE"
+        ).count()
         context["leaves"] = LeaveRequest.objects.select_related("employee").order_by("-created_at")[:10]
         context["employees"] = Employee.objects.select_related("user", "designation")
         context["show_payroll"] = request.GET.get("show_payroll") == "true"
         return render(request, "dashboard/hr_dashboard.html", context)
 
-    # ==========================================
-    # 🔥 MANAGER DASHBOARD
-    # ==========================================
-    if managed_department is not None:
-        team = Employee.objects.filter(department=managed_department)
-        context["managed_department"] = managed_department
-        context["team"] = team
-        return render(request, "dashboard/manager_dashboard.html", context)
-
-    # ==========================================
-    # 👤 EMPLOYEE DASHBOARD
-    # ==========================================
-    return render(request, "dashboard/employee_dashboard.html", context)
-
+    return redirect("/")
 
 @login_required
 def stats_api(request):

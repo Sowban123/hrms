@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <span class="fw-semibold fs-5">Manage Leave Requests</span>
+  <a href="{{ request.META.HTTP_REFERER|default:'/dashboard/' }}" class="btn btn-outline-dark btn-sm">← Back</a>
+</div>
+
 <h3 class="fw-bold mb-3">Team Leave Requests</h3>
 <p class="text-muted mb-4">
   Managing department: <strong>{{ managed_department.name }}</strong>
@@ -15,7 +20,7 @@
 <table class="table table-striped align-middle">
   <thead>
     <tr>
-      <th>#</th>
+      <th>Emp ID</th>
       <th>Employee</th>
       <th>Type</th>
       <th>From</th>
@@ -29,6 +34,7 @@
   <tbody>
     {% for leave in leaves %}
     <tr>
+      <td>{{ emp.employee_id }}</td>
       <td>{{ forloop.counter }}</td>
       <td>{{ leave.employee }}</td>
       <td>{{ leave.get_leave_type_display }}</td>

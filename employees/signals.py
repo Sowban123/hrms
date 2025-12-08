@@ -4,22 +4,24 @@ from django.conf import settings
 from .models import Employee
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_employee(sender, instance, created, **kwargs):
+def create_employee_profile(sender, instance, created, **kwargs):
     """
-    Automatically create Employee profile ONLY when:
-    - The user is created for the first time, AND
-    - The user role is EMPLOYEE
+    Auto-create Employee profile ONLY when a USER is created with role=EMPLOYEE
+    and generate employee_id (E0001, E0002, ...)
     """
-    if not created:   # only on first creation
+    if not created:
         return
 
     if instance.role != "EMPLOYEE":
-        return  # Do NOT create employee for HR or ADMIN
+        return
 
-    Employee.objects.get_or_create(
+    # Create employee record
+    emp = Employee.objects.create(
         user=instance,
-        defaults={
-            "date_of_joining": "2000-01-01",
-            "basic_salary": 0,
-        }
+        date_of_joining="2000-01-01",
+        basic_salary=0
     )
+
+    # Generate employee ID automatically
+    emp.employee_id = f"E{emp.id:04d}"
+    emp.save()

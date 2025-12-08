@@ -33,3 +33,18 @@ class EmployeeCreateForm(forms.ModelForm):
         if not password.strip():
             raise forms.ValidationError("Password cannot be empty")
         return password
+
+
+from .models import EmployeeProfile
+
+class EmployeeProfileForm(forms.ModelForm):
+    class Meta:
+        model = EmployeeProfile
+        fields = [
+            "photo", "phone", "personal_email", "address",
+            "date_of_birth", "emergency_contact",
+            "bank_name", "account_number", "ifsc_code"
+        ]
+        widgets = {
+            "date_of_birth": forms.DateInput(attrs={"type": "date"}),
+        }

@@ -17,9 +17,16 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from django.shortcuts import redirect
+
+def home(request):
+    return redirect('login_page')   # 👈 MUST match the name in accounts/urls.py
 
 urlpatterns = [
-    path('accounts/', include('accounts.urls')),   # 🔥 MUST be FIRST
+    path('', home),                                 # "/" → login page
+    path('accounts/', include('accounts.urls')),    # login, logout
     path('admin/', admin.site.urls),
     path('employees/', include('employees.urls')),
     path('attendance/', include('attendance.urls')),
@@ -27,5 +34,7 @@ urlpatterns = [
     path('payroll/', include('payroll.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('reports/', include('reports.urls')),
-        
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -165,3 +165,40 @@ def manager_reject_leave(request, pk):
     leave.save()
     messages.error(request, "Leave rejected.")
     return redirect("leaves:manager_list")
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+
+from employees.models import Employee, Department
+from .models import LeaveRequest
+
+
+@login_required
+def manager_leave_list(request):
+    user = request.user
+
+    # 1) Get Employee record for this user
+    try:
+        emp = Employee.objects.get(user=user)
+    except Employee.DoesNotExist:
+        # Not an employee → no manager view
+        return redirect('/dashboard/')
+
+    # 2) Check if this employee is a manager of any department
+    dept = Department.objects.filter(manager=emp).first()
+    if not dept:
+        # Not assigned as manager
+        return redirect('/dashboard/')
+
+    # 3) Get leave requests of team members in this department (exclude manager himself)
+    leaves = (
+        LeaveRequest.objects
+        .filter(employee__department=dept)
+        .exclude(employee=emp)
+        .select_related("employee__user")
+        .order_by("-created_at")
+    )
+
+    return render(request, "leaves/manager_list.html", {
+        "department": dept,
+        "leaves": leaves,
+    })

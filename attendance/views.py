@@ -72,3 +72,34 @@ def monthly(request):
         'year': year,
         'total_hours': total_hours,
     })
+
+
+@login_required
+def manager_team_attendance(request):
+    from employees.models import Employee, Department  # avoid circular import
+
+    user = request.user
+
+    try:
+        emp = Employee.objects.get(user=user)
+        dept = Department.objects.filter(manager=emp).first()
+        if not dept:
+            return redirect('/dashboard/')
+    except Employee.DoesNotExist:
+        return redirect('/dashboard/')
+
+    today = timezone.localdate()
+
+    team = Employee.objects.filter(department=dept).select_related("user")
+    team_attendance = Attendance.objects.filter(date=today)
+
+    present_ids = team_attendance.values_list("user_id", flat=True)
+    present = [m for m in team if m.user.id in present_ids]
+    absent = [m for m in team if m.user.id not in present_ids]
+
+    return render(request, 'attendance/manager_team.html', {
+        "dept": dept,
+        "present": present,
+        "absent": absent,
+        "today": today,
+    })

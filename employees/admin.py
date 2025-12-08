@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from .models import Employee, Department, Designation
+from .models import Employee, Department, Designation, EmployeeProfile
 
 User = get_user_model()   # this returns the actual User model
 
@@ -14,4 +14,4 @@ class EmployeeAdmin(admin.ModelAdmin):
 admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(Department)
 admin.site.register(Designation)
-
+admin.site.register(EmployeeProfile)

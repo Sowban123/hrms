@@ -29,6 +29,7 @@
           <li class="nav-item"><a class="nav-link" href="{% url 'leaves:admin_list' %}">Leaves</a></li>
           <li class="nav-item"><a class="nav-link" href="{% url 'payroll:list' %}">Payroll</a></li>
           <li class="nav-item"><a class="nav-link" href="/reports/">Reports</a></li>
+          
         {% endif %}
 
         {% if request.user.role == "EMPLOYEE" %}
