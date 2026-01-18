@@ -100,13 +100,9 @@ Show strong Django + React integration
 
 Demonstrate real-world backend logic
 
-Suitable for:
+...
 
-Job interviews
-
-Resume projects
-
-Company-level demos
+  
 
 🔮 Future Enhancements
 
@@ -123,6 +119,10 @@ Deployment on AWS / Render / Railway
 PostgreSQL database
 
 Email & notification system
+
+...
+
+
 
 👨‍💻 Author
 
