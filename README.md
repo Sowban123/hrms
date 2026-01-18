@@ -100,7 +100,7 @@ Show strong Django + React integration
 
 Demonstrate real-world backend logic
 
-...
+
 
   
 
@@ -120,7 +120,8 @@ PostgreSQL database
 
 Email & notification system
 
-...
+
+
 
 
 
