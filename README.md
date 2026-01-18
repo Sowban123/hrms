@@ -91,7 +91,7 @@ frontend/ (React App)
 │ └── App.js
 
 
-
+##
 🎯 Purpose of This Project
 
 Build a full-stack HRMS application
@@ -103,7 +103,7 @@ Demonstrate real-world backend logic
 
 
   
-
+##
 🔮 Future Enhancements
 
 JWT Authentication
@@ -124,6 +124,7 @@ Email & notification system
 
 
 
+##
 
 👨‍💻 Author
 
