@@ -58,7 +58,7 @@ This project is designed to represent a real-world, company-level HR application
 - HTML, CSS, Bootstrap / Tailwind
 - Component-based UI
 
----
+###
 🔑 User Roles
 Role	Access Level
 Admin	Full system control
@@ -67,28 +67,6 @@ Manager	Team attendance & leave approval
 Employee	Attendance & leave requests
 
 
-## 📂 Project Structure
-
-hrms/
-├── accounts/ # Authentication & roles
-├── attendance/ # Attendance system
-├── dashboard/ # Dashboard logic
-├── employees/ # Employee management
-├── leaves/ # Leave management
-├── payroll/ # Payroll system
-├── reports/ # Report generation
-├── templates/ # Django templates (for backend testing)
-├── employee_photos/ # Uploaded employee images
-├── db.sqlite3 # Database
-├── manage.py
-└── requirements.txt
-
-frontend/ (React App)
-├── src/
-│ ├── components/
-│ ├── pages/
-│ ├── services/ # API calls
-│ └── App.js
 
 
 ##
@@ -122,6 +100,28 @@ Email & notification system
 
 
 
+## 📂 Project Structure
+
+hrms/
+├── accounts/ # Authentication & roles
+├── attendance/ # Attendance system
+├── dashboard/ # Dashboard logic
+├── employees/ # Employee management
+├── leaves/ # Leave management
+├── payroll/ # Payroll system
+├── reports/ # Report generation
+├── templates/ # Django templates (for backend testing)
+├── employee_photos/ # Uploaded employee images
+├── db.sqlite3 # Database
+├── manage.py
+└── requirements.txt
+
+frontend/ (React App)
+├── src/
+│ ├── components/
+│ ├── pages/
+│ ├── services/ # API calls
+│ └── App.js
 
 
 ##
